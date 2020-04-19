@@ -1,0 +1,2 @@
+# nickmacs
+Plain emacs config
