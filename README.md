@@ -1,2 +1,5 @@
-# nickmacs
-Plain emacs config
+# silvermacs
+
+## plain
+
+## doom
