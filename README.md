@@ -1,5 +1,0 @@
-# silvermacs
-
-## plain
-
-## doom
