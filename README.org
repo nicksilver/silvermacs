@@ -1,0 +1,6 @@
+
+* Silvermacs - nicksilver emacs repo
+
+** Doom
+
+** Plain
