@@ -9,6 +9,7 @@
 (setq user-full-name "Nick Silverman"
       user-mail-address "nick.silverman11@gmail.com")
 
+;; Viz settings =================================================
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -32,13 +33,32 @@
 ;; (setq doom-theme 'doom-sourcerer)
 ;; (setq doom-theme 'doom-wilmersdorf)
 
+;; Beacon flashes cursor line
+(use-package beacon
+  :custom
+  (beacon-push-mark 10)
+  (beacon-color "#cc342b")
+  (beacon-blink-delay 0.3)
+  (beacon-blink-duration 0.3)
+  :config
+  (beacon-mode)
+  (global-hl-line-mode 1))
+
+;; General preferences =========================================
+;; Word wrap
+;; (setq visual-fill-column 80)
+;; enable word-wrap (almost) everywhere
+(global-visual-line-mode t)
+(+global-word-wrap-mode +1)
+
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type nil)
+
 ;;; Org-mode settings ==========================================
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org/projects/")
 (setq org-todo-file "~/Dropbox/org/projects/actions.org")
 
-;; These are Nick's personal org settings
 ;; Set TODO keywords
 (setq org-todo-keywords
       '((sequence "TODO" "WAITING" "|" "DONE")))
@@ -75,6 +95,14 @@
 ;; Org-roam settings ===========================================
 (setq org-roam-directory "~/Dropbox/org/notes/")
 
+;; This changes the file name and template during note capture
+(setq org-roam-capture-templates
+      `(("d" "default" plain (function org-roam--capture-get-point)
+         "%?"
+         :file-name "${slug}"
+         :head "#+TITLE: ${title}\n"
+         :unnarrowed t)))
+
 ;; Deft
 (use-package deft
   :after org
@@ -84,7 +112,7 @@
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
   (deft-default-extension "org")
-  (deft-directory org-roam-directory))
+  (deft-directory "~/Dropbox/org/notes/"))
 
 ;; This speeds up deft...but limits the amount of files you see
 ;; Overwrite `deft-current-files` for the `deft-buffer-setup` and limit it to 50 entries
@@ -95,64 +123,7 @@
 
 (advice-add 'deft-buffer-setup :around #'anks-deft-limiting-fn)
 
-;; Org-roam-bibtex settings =============================================
-;; Based on https://rgoswami.me/posts/org-note-workflow/#search
-(setq zot-bib-file "~/Dropbox/bibTex/zotbibs.bib")
-(use-package org-roam-bibtex
-  :after (org-roam)
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (setq orb-preformat-keywords
-   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
-  (setq orb-templates
-        '(("r" "ref" plain (function org-roam-capture--get-point)
-           ""
-           :file-name "${slug}"
-           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
-
-- tags ::
-- keywords :: ${keywords}
-
-\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
-
-           :unnarrowed t))))
-
-;; Helm-bibtex
-(after! org-ref
-  (setq bibtex-completion-notes-path org-roam-directory
-        bibtex-completion-bibliography zot-bib-file
-        bibtex-completion-pdf-field "file"
-        bibtex-completion-notes-template-multiple-files
-        (concat
-         "#+TITLE: ${title}\n"
-         "#+ROAM_KEY: cite:${=key=}\n"
-         "* TODO Notes\n"
-         ":PROPERTIES:\n"
-         ":Custom_ID: ${=key=}\n"
-         ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-         ":AUTHOR: ${author-abbrev}\n"
-         ":JOURNAL: ${journaltitle}\n"
-         ":DATE: ${date}\n"
-         ":YEAR: ${year}\n"
-         ":DOI: ${doi}\n"
-         ":URL: ${url}\n"
-         ":END:\n\n"
-)))
-
-;; Org-ref
-(use-package org-ref
-    :config
-    (setq
-         org-ref-completion-library 'org-ref-ivy-cite
-         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-         org-ref-default-bibliography (list zot-bib-file)
-         ;;org-ref-bibliography-notes "/home/haozeke/Git/Gitlab/Mine/Notes/bibnotes.org"
-         org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
-         org-ref-notes-directory org-roam-directory
-         org-ref-notes-function 'orb-edit-notes
-         ))
-
-;; Org-noter
+;; Org-noter settings ============================================
 (use-package org-noter
   :after (:any org pdf-view)
   :config
@@ -168,18 +139,82 @@
    )
   )
 
+;; Org-ref settings ============================================
+(setq zotfile-default-location "~/Dropbox/bibTex/zotbibs.bib")
+(use-package org-ref
+    :config
+    (setq
+         org-ref-completion-library 'org-ref-ivy-cite
+         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+         org-ref-default-bibliography (list "~/Dropbox/bibTex/zotbibs.bib")
+         org-ref-bibliography-notes "~/Dropbox/org/notes/bibnotes.org"
+         org-ref-note-title-format (concat
+                                    "* TODO %y - %t\n"
+                                    "  :PROPERTIES:\n"
+                                    "  :Custom_ID: %k\n"
+                                    "  :NOTER_DOCUMENT: %F\n"
+                                    "  :ROAM_KEY: cite:%k\n"
+                                    "  :AUTHOR: %9a\n"
+                                    "  :JOURNAL: %j\n"
+                                    "  :YEAR: %y\n"
+                                    "  :VOLUME: %v\n"
+                                    "  :PAGES: %p\n"
+                                    "  :DOI: %D\n"
+                                    "  :URL: %U\n"
+                                    "  :END:\n\n")
+         org-ref-notes-directory "~/Dropbox/org/notes/"
+         org-ref-pdf-directory "~/Dropbox/zotero/"
+         org-ref-notes-function 'orb-edit-notes
+    ))
 
-;; General preferences =========================================
-;; Word wrap
-;; (setq visual-fill-column 80)
-;; enable word-wrap (almost) everywhere
-(global-visual-line-mode t)
-(+global-word-wrap-mode +1)
+;; Helm-bibtex
+(after! org-ref
+  (setq bibtex-completion-pdf-field "file"
+        bibtex-completion-bibliography zotfile-default-location
+        bibtex-completion-notes-path "~/Dropbox/org/notes/"
+        bibtex-completion-notes-template-multiple-files
+        (concat
+         "#+TITLE: ${title}\n"
+         "#+ROAM_KEY: cite:${=key=}\n"
+         "#+ROAM_TAGS: ${keywords}\n"
+         "* TODO Notes\n"
+         ":PROPERTIES:\n"
+         ":Custom_ID: ${=key=}\n"
+         ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+         ":AUTHOR: ${author-abbrev}\n"
+         ":JOURNAL: ${journaltitle}\n"
+         ":DATE: ${date}\n"
+         ":YEAR: ${year}\n"
+         ":DOI: ${doi}\n"
+         ":URL: ${url}\n"
+         ":END:\n\n"
+         )
+        )
+)
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type nil)
-
+;; Org-roam-bibtex
+(use-package org-roam-bibtex
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq orb-preformat-keywords
+   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+  (setq orb-templates
+        `(("r" "ref" plain (function org-roam-capture--get-point)
+           ""
+           :file-name "${=key=}"
+           :head ,(concat
+                   "#+TITLE:  ${title}\n"
+                   "#+ROAM_KEY: ${ref}\n\n"
+                   "* ${title}\n"
+                   "  :PROPERTIES:\n"
+                   "  :Custom_ID: ${=key=}\n"
+                   "  :URL: ${url}\n"
+                   "  :AUTHOR: ${author-or-editor}\n"
+                   "  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+                   "  :NOTER_PAGE: \n"
+                   "  :END:\n")
+           :unnarrowed t))))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
