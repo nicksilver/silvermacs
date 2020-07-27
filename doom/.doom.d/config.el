@@ -26,12 +26,12 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-solarized-dark)
-;; (setq doom-theme 'doom-vibrant)
+;; (setq doom-theme 'doom-solarized-dark)
 ;; (setq doom-theme 'doom-solarized-light)
 ;; (setq doom-theme 'doom-oceanic-next)
 ;; (setq doom-theme 'doom-sourcerer)
-;; (setq doom-theme 'doom-wilmersdorf)
+(setq doom-theme 'doom-wilmersdorf)
+
 
 ;; Beacon flashes cursor line
 (use-package beacon
@@ -140,37 +140,36 @@
   )
 
 ;; Org-ref settings ============================================
-(setq zotfile-default-location "~/Dropbox/bibTex/zotbibs.bib")
 (use-package org-ref
-    :config
-    (setq
-         org-ref-completion-library 'org-ref-ivy-cite
-         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-         org-ref-default-bibliography (list "~/Dropbox/bibTex/zotbibs.bib")
-         org-ref-bibliography-notes "~/Dropbox/org/notes/bibnotes.org"
-         org-ref-note-title-format (concat
-                                    "* TODO %y - %t\n"
-                                    "  :PROPERTIES:\n"
-                                    "  :Custom_ID: %k\n"
-                                    "  :NOTER_DOCUMENT: %F\n"
-                                    "  :ROAM_KEY: cite:%k\n"
-                                    "  :AUTHOR: %9a\n"
-                                    "  :JOURNAL: %j\n"
-                                    "  :YEAR: %y\n"
-                                    "  :VOLUME: %v\n"
-                                    "  :PAGES: %p\n"
-                                    "  :DOI: %D\n"
-                                    "  :URL: %U\n"
-                                    "  :END:\n\n")
-         org-ref-notes-directory "~/Dropbox/org/notes/"
-         org-ref-pdf-directory "~/Dropbox/zotero/"
-         org-ref-notes-function 'orb-edit-notes
-    ))
+  :config
+  (setq
+   ;; org-ref-completion-library 'org-ref-ivy-cite
+   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+   org-ref-default-bibliography (list "~/Dropbox/bibTex/zotbibs.bib")
+   org-ref-bibliography-notes "~/Dropbox/org/notes/bibnotes.org"
+   org-ref-note-title-format (concat
+                              "* TODO %y - %t\n"
+                              "  :PROPERTIES:\n"
+                              "  :Custom_ID: %k\n"
+                              "  :NOTER_DOCUMENT: %F\n"
+                              "  :ROAM_KEY: cite:%k\n"
+                              "  :AUTHOR: %9a\n"
+                              "  :JOURNAL: %j\n"
+                              "  :YEAR: %y\n"
+                              "  :VOLUME: %v\n"
+                              "  :PAGES: %p\n"
+                              "  :DOI: %D\n"
+                              "  :URL: %U\n"
+                              "  :END:\n\n")
+   org-ref-notes-directory "~/Dropbox/org/notes/"
+   org-ref-pdf-directory "~/Dropbox/zotero/"
+   org-ref-notes-function 'orb-edit-notes
+   ))
 
 ;; Helm-bibtex
 (after! org-ref
   (setq bibtex-completion-pdf-field "file"
-        bibtex-completion-bibliography zotfile-default-location
+        bibtex-completion-bibliography "~/Dropbox/bibTex/zotbibs.bib"
         bibtex-completion-notes-path "~/Dropbox/org/notes/"
         bibtex-completion-notes-template-multiple-files
         (concat
@@ -190,7 +189,10 @@
          ":END:\n\n"
          )
         )
-)
+  )
+
+;; some keybindings
+(map! :leader "n h b" #'helm-bibtex)
 
 ;; Org-roam-bibtex
 (use-package org-roam-bibtex
@@ -215,6 +217,10 @@
                    "  :NOTER_PAGE: \n"
                    "  :END:\n")
            :unnarrowed t))))
+
+;; some keybindings
+(map! :leader "n r t" #'orb-insert-non-ref)
+(map! :leader "n r a" #'orb-note-actions)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
