@@ -29,9 +29,10 @@
 ;; (setq doom-theme 'doom-solarized-dark)
 ;; (setq doom-theme 'doom-solarized-light)
 ;; (setq doom-theme 'doom-oceanic-next)
+;; (setq doom-theme 'doom-wilmersdorf)
 ;; (setq doom-theme 'doom-sourcerer)
-(setq doom-theme 'doom-wilmersdorf)
-
+;; (setq doom-theme 'doom-city-lights)
+(setq doom-theme 'doom-moonlight)
 
 ;; Beacon flashes cursor line
 (use-package beacon
@@ -46,14 +47,20 @@
 
 ;; General preferences =========================================
 ;; Word wrap
-;; (setq visual-fill-column 80)
-;; enable word-wrap (almost) everywhere
-(global-visual-line-mode t)
-(+global-word-wrap-mode +1)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)
+
+;; ESS settings ================================================
+(use-package ess-r-mode
+  :bind
+  (:map ess-r-mode-map
+        ("_" . ess-insert-assign))
+  (:map inferior-ess-r-mode-map
+        ("_" . ess-insert-assign)))
+
 
 ;;; Org-mode settings ==========================================
 (setq org-directory "~/Dropbox/org/projects/")
@@ -148,7 +155,7 @@
    org-ref-default-bibliography (list "~/Dropbox/bibTex/zotbibs.bib")
    org-ref-bibliography-notes "~/Dropbox/org/notes/bibnotes.org"
    org-ref-note-title-format (concat
-                              "* TODO %y - %t\n"
+                              "* %y - %t\n"
                               "  :PROPERTIES:\n"
                               "  :Custom_ID: %k\n"
                               "  :NOTER_DOCUMENT: %F\n"
@@ -176,7 +183,7 @@
          "#+TITLE: ${title}\n"
          "#+ROAM_KEY: cite:${=key=}\n"
          "#+ROAM_TAGS: ${keywords}\n"
-         "* TODO Notes\n"
+         "* Notes\n"
          ":PROPERTIES:\n"
          ":Custom_ID: ${=key=}\n"
          ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
