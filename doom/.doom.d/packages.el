@@ -50,3 +50,5 @@
 (package! helm-bibtex)
 (package! org-ref)
 (package! org-roam-bibtex)
+(package! org-tree-slide)
+(package! org-wild-notifier)

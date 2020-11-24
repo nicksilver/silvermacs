@@ -20,18 +20,15 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "monospace" :size 14))
-;; (setq doom-font (font-spec :family "Ubuntu Mono" :size 16))
+(setq doom-font (font-spec :family "Fira Code Retina" :size 14))
+(setq doom-variable-pitch-font (font-spec :family "Cantarell" :size 14 :weight 'regular))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (setq doom-theme 'doom-solarized-dark)
 ;; (setq doom-theme 'doom-solarized-light)
-;; (setq doom-theme 'doom-oceanic-next)
 ;; (setq doom-theme 'doom-wilmersdorf)
-;; (setq doom-theme 'doom-sourcerer)
-;; (setq doom-theme 'doom-city-lights)
+;; (setq doom-theme 'doom-dracula)
 (setq doom-theme 'doom-moonlight)
 
 ;; Beacon flashes cursor line
@@ -44,6 +41,27 @@
   :config
   (beacon-mode)
   (global-hl-line-mode 1))
+
+;; Modeline stuff (see https://github.com/seagle0128/doom-modeline)
+(setq doom-modeline-height 25)
+(setq doom-modeline-bar-width 3)
+(setq doom-modeline-window-width-limit fill-column)
+(setq doom-modeline-icon (display-graphic-p))
+(setq doom-modeline-major-mode-icon t)
+(setq doom-modeline-major-mode-color-icon t)
+(setq doom-modeline-buffer-state-icon t)
+(setq doom-modeline-buffer-modification-icon t)
+(setq doom-modeline-unicode-fallback nil)
+(setq doom-modeline-minor-modes nil)
+(setq doom-modeline-enable-word-count nil)
+(setq doom-modeline-buffer-encoding t)
+(setq doom-modeline-indent-info nil)
+(setq doom-modeline-checker-simple-format t)
+(setq doom-modeline-number-limit 99)
+(setq doom-modeline-vcs-max-length 12)
+(setq doom-modeline-workspace-name t)
+(setq doom-modeline-lsp t)
+(setq doom-modeline-modal-icon t)
 
 ;; General preferences =========================================
 ;; Word wrap
@@ -98,6 +116,22 @@
           (file+headline org-default-notes-file "Inbox")
           "* %?\n %i\n %a"
           :kill-buffer t))))
+
+;; Org-wild-notifier
+(use-package org-wild-notifier
+  :ensure t
+  :init
+  (org-wild-notifier-mode)
+  :custom
+  (org-wild-notifier-alert-time '(30 5)))
+
+(use-package alert
+  :defer t
+  :ensure t
+  :commands (alert)
+  :custom
+  (alert-default-style 'libnotify))
+
 
 ;; Org-roam settings ===========================================
 (setq org-roam-directory "~/Dropbox/org/notes/")
@@ -228,6 +262,35 @@
 ;; some keybindings
 (map! :leader "n r t" #'orb-insert-non-ref)
 (map! :leader "n r a" #'orb-note-actions)
+
+;; Org-tree-slide (presentation mode in org) ====================================
+(map! "<f8>" #'org-tree-slide-mode)
+(map! "S-<f8>" #'org-tree-slide-skip-done-toggle)
+
+;; These functions change the text scaling in presenation and make images inline
+(defun presentation-setup ()
+  (setq text-scale-mode-amount 3)
+  (org-display-inline-images)
+  (text-scale-mode 1)
+  (beacon-mode 0))
+
+
+(defun presentation-end ()
+  (text-scale-mode 0)
+  (beacon-mode 1))
+
+(use-package org-tree-slide
+  :hook ((org-tree-slide-play . presentation-setup)
+         (org-tree-slide-stop . presentation-end))
+  :custom
+  (org-tree-slide-slide-in-effect t)
+  (org-tree-slide-activate-message "Presentation started!")
+  (org-tree-slide-deactivate-message "Presentation finished!")
+  (org-tree-slide-header t)
+  (org-image-actual-width nil))
+
+
+
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
