@@ -28,8 +28,8 @@
 ;; `load-theme' function. This is the default:
 ;; (setq doom-theme 'doom-solarized-light)
 ;; (setq doom-theme 'doom-wilmersdorf)
-;; (setq doom-theme 'doom-dracula)
-(setq doom-theme 'doom-moonlight)
+(setq doom-theme 'doom-dracula)
+;; (setq doom-theme 'doom-moonlight)
 
 ;; Beacon flashes cursor line
 (use-package beacon
@@ -71,6 +71,12 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)
 
+;; LSP-mode ====================================================
+(use-package python-mode
+  :hook (python-mode . lsp-deferred)
+  :custom (lsp-headerline-breadcrumb-enable t))
+
+
 ;; ESS settings ================================================
 (use-package ess-r-mode
   :bind
@@ -78,6 +84,38 @@
         ("_" . ess-insert-assign))
   (:map inferior-ess-r-mode-map
         ("_" . ess-insert-assign)))
+
+;;; Org-roam settings ===========================================
+(setq org-roam-directory "~/Dropbox/org/notes/")
+(setq org-roam-buffer-width .25)
+
+;; This changes the file name and template during note capture
+(setq org-roam-capture-templates
+      `(("d" "default" plain (function org-roam--capture-get-point)
+         "%?"
+         :file-name "${slug}"
+         :head "#+TITLE: ${title}\n"
+         :unnarrowed t)))
+
+ ;; Deft
+(use-package deft
+  :after org
+  :bind
+  ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory "~/Dropbox/org/notes/"))
+
+;; This speeds up deft...but limits the amount of files you see
+;; Overwrite `deft-current-files` for the `deft-buffer-setup` and limit it to 50 entries
+(defun anks-deft-limiting-fn (orig-fun &rest args)
+  (let
+      ((deft-current-files (-take 50 deft-current-files)))
+    (apply orig-fun args)))
+
+(advice-add 'deft-buffer-setup :around #'anks-deft-limiting-fn)
 
 
 ;;; Org-mode settings ==========================================
@@ -97,11 +135,30 @@
               "/archive/%s::datetree/"))
 
 ;; Set org agenda files
-(setq org-agenda-files (list org-todo-file
-                             "~/Dropbox/org/projects/someday.org"))
+;; (setq org-agenda-files (list org-todo-file
+;;                              "~/Dropbox/org/projects/someday.org"))
+(setq org-agenda-files (list org-directory))
 
 ;; Include timestamp when closing a todo
 (setq org-log-done 'time)
+
+;; Create list of common tags
+(setq org-tag-alist '(("@errand" . ?E)
+                      ("@tumbleleaf" . ?T)
+                      ("@burlington" . ?B)
+                      ("@home" . ?H)
+                      ("@work" . ?W)
+                      ("@ocean" . ?O)
+                      ("@river" . ?R)
+                      ("@mountain" . ?M)
+                      ("paddling" . ?p)
+                      ("hunting" . ?h)
+                      ("fishing" . ?f)
+                      ("surfing" . ?s)
+                      ("cycling" . ?c)
+                      ("climbing" . ?m)
+                      ("running" . ?r)
+                      ("hiking" . ?i)))
 
 ;; Capture
 (after! org
@@ -119,7 +176,7 @@
 
 ;; Org-wild-notifier
 (use-package org-wild-notifier
-  :ensure t
+  :defer t
   :init
   (org-wild-notifier-mode)
   :custom
@@ -127,42 +184,36 @@
 
 (use-package alert
   :defer t
-  :ensure t
   :commands (alert)
   :custom
   (alert-default-style 'libnotify))
 
+;; Org-journal settings =======================================
+(setq org-journal-dir "~/Dropbox/org/journal/"
+      org-journal-file-type 'monthly
+      org-journal-file-format "%m%Y.org"
+      org-journal-date-prefix "* "
+      org-journal-date-format "%A, %B %d %Y"
+      org-journal-file-header "#+TITLE: %B %Y Journal\n\n")
 
-;; Org-roam settings ===========================================
-(setq org-roam-directory "~/Dropbox/org/notes/")
+;; Org-trello settings
+;;; See .emacs.d/.trello/nicksilverman.el for key and token
 
-;; This changes the file name and template during note capture
-(setq org-roam-capture-templates
-      `(("d" "default" plain (function org-roam--capture-get-point)
-         "%?"
-         :file-name "${slug}"
-         :head "#+TITLE: ${title}\n"
-         :unnarrowed t)))
+;; This makes it so the keybindings work in evil mode
+(define-key universal-argument-map
+  (kbd (concat doom-leader-key " u"))
+  'universal-argument-more)
 
-;; Deft
-(use-package deft
-  :after org
-  :bind
-  ("C-c n d" . deft)
-  :custom
-  (deft-recursive t)
-  (deft-use-filter-string-for-filename t)
-  (deft-default-extension "org")
-  (deft-directory "~/Dropbox/org/notes/"))
-
-;; This speeds up deft...but limits the amount of files you see
-;; Overwrite `deft-current-files` for the `deft-buffer-setup` and limit it to 50 entries
-(defun anks-deft-limiting-fn (orig-fun &rest args)
-  (let
-      ((deft-current-files (-take 50 deft-current-files)))
-    (apply orig-fun args)))
-
-(advice-add 'deft-buffer-setup :around #'anks-deft-limiting-fn)
+;; Change some of the keybindings for Doom
+;;; Note: to pull from Trello use SPC-u before sync command
+(map! :leader
+      (:prefix ("r" . "trello")
+       (:desc "Sync Buffer" "s" #'org-trello-sync-buffer)
+       (:desc "Sync Card" "c" #'org-trello-sync-card)
+       (:desc "Sync Comment" "n" #'org-trello-sync-comment)
+       (:desc "Assign Me" "m" #'org-trello-assign-me)
+       (:desc "Assign User" "u" #'org-trello-toggle-assign-user)
+      ))
 
 ;; Org-noter settings ============================================
 (use-package org-noter
