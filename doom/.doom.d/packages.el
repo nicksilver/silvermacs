@@ -49,7 +49,10 @@
 (package! beacon)
 (package! helm-bibtex)
 (package! org-ref)
-(package! org-roam-bibtex)
 (package! org-tree-slide)
 (package! org-wild-notifier)
-(package! org-trello)
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+
+(unpin! org-roam company-org-roam)
+(unpin! bibtex-completion helm-bibtex ivy-bibtex)

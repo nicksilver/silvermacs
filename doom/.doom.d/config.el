@@ -71,11 +71,28 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)
 
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
+(defun unfill-paragraph (&optional region)
+"Takes a multi-line paragraph and makes it into a single line of text."
+(interactive (progn (barf-if-buffer-read-only) '(t)))
+(let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+(fill-paragraph nil region)))
+;; Handy key definition
+(define-key global-map "\M-Q" 'unfill-paragraph)
+
+;; This is to use pdf-tools instead of doc-viewer
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  ;; This means that pdfs are fitted to width by default when you open them
+  (setq-default pdf-view-display-size 'fit-width))
+
 ;; LSP-mode ====================================================
 (use-package python-mode
   :hook (python-mode . lsp-deferred)
   :custom (lsp-headerline-breadcrumb-enable t))
-
 
 ;; ESS settings ================================================
 (use-package ess-r-mode
@@ -84,39 +101,6 @@
         ("_" . ess-insert-assign))
   (:map inferior-ess-r-mode-map
         ("_" . ess-insert-assign)))
-
-;;; Org-roam settings ===========================================
-(setq org-roam-directory "~/Dropbox/org/notes/")
-(setq org-roam-buffer-width .25)
-
-;; This changes the file name and template during note capture
-(setq org-roam-capture-templates
-      `(("d" "default" plain (function org-roam--capture-get-point)
-         "%?"
-         :file-name "${slug}"
-         :head "#+TITLE: ${title}\n"
-         :unnarrowed t)))
-
- ;; Deft
-(use-package deft
-  :after org
-  :bind
-  ("C-c n d" . deft)
-  :custom
-  (deft-recursive t)
-  (deft-use-filter-string-for-filename t)
-  (deft-default-extension "org")
-  (deft-directory "~/Dropbox/org/notes/"))
-
-;; This speeds up deft...but limits the amount of files you see
-;; Overwrite `deft-current-files` for the `deft-buffer-setup` and limit it to 50 entries
-(defun anks-deft-limiting-fn (orig-fun &rest args)
-  (let
-      ((deft-current-files (-take 50 deft-current-files)))
-    (apply orig-fun args)))
-
-(advice-add 'deft-buffer-setup :around #'anks-deft-limiting-fn)
-
 
 ;;; Org-mode settings ==========================================
 (setq org-directory "~/Dropbox/org/projects/")
@@ -188,6 +172,26 @@
   :custom
   (alert-default-style 'libnotify))
 
+;; Deft settings ==============================================
+(use-package deft
+  :after org
+  :bind
+  ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory "~/Dropbox/org/projects/"))
+
+;; This speeds up deft...but limits the amount of files you see
+;; Overwrite `deft-current-files` for the `deft-buffer-setup` and limit it to 50 entries
+(defun anks-deft-limiting-fn (orig-fun &rest args)
+  (let
+      ((deft-current-files (-take 50 deft-current-files)))
+    (apply orig-fun args)))
+
+(advice-add 'deft-buffer-setup :around #'anks-deft-limiting-fn)
+
 ;; Org-journal settings =======================================
 (setq org-journal-dir "~/Dropbox/org/journal/"
       org-journal-file-type 'monthly
@@ -196,69 +200,34 @@
       org-journal-date-format "%A, %B %d %Y"
       org-journal-file-header "#+TITLE: %B %Y Journal\n\n")
 
-;; Org-trello settings
-;;; See .emacs.d/.trello/nicksilverman.el for key and token
+;; Org-roam settings ===========================================
+(setq org-roam-directory "~/Dropbox/org/notes/")
+(setq org-roam-buffer-width .25)
 
-;; This makes it so the keybindings work in evil mode
-(define-key universal-argument-map
-  (kbd (concat doom-leader-key " u"))
-  'universal-argument-more)
-
-;; Change some of the keybindings for Doom
-;;; Note: to pull from Trello use SPC-u before sync command
-(map! :leader
-      (:prefix ("r" . "trello")
-       (:desc "Sync Buffer" "s" #'org-trello-sync-buffer)
-       (:desc "Sync Card" "c" #'org-trello-sync-card)
-       (:desc "Sync Comment" "n" #'org-trello-sync-comment)
-       (:desc "Assign Me" "m" #'org-trello-assign-me)
-       (:desc "Assign User" "u" #'org-trello-toggle-assign-user)
-      ))
-
-;; Org-noter settings ============================================
-(use-package org-noter
-  :after (:any org pdf-view)
-  :config
-  (setq
-   ;; The WM can handle splits
-   org-noter-notes-window-location 'other-frame
-   ;; Please stop opening frames
-   org-noter-always-create-frame nil
-   ;; I want to see the whole file
-   org-noter-hide-other nil
-   ;; Everything is relative to the main notes file
-   org-noter-notes-search-path (list org-roam-directory)
-   )
-  )
-
-;; Org-ref settings ============================================
-(use-package org-ref
-  :config
-  (setq
-   ;; org-ref-completion-library 'org-ref-ivy-cite
-   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-   org-ref-default-bibliography (list "~/Dropbox/bibTex/zotbibs.bib")
-   org-ref-bibliography-notes "~/Dropbox/org/notes/bibnotes.org"
-   org-ref-note-title-format (concat
-                              "* %y - %t\n"
+;; This changes the file name and template during note capture
+(setq org-roam-capture-templates
+      `(("d" "default" plain "%?"
+         :target (file+head "${slug}.org"
+                            "#+TITLE: ${title}\n")
+         :unnarrowed t)
+         ("r" "reference" plain "%?"
+          :target (file+head "${citekey}.org"
+                             ,(concat
+                              "#+TITLE:  ${title}\n"
+                              "#+AUTHOR: ${author-or-editor}\n"
+                              "#+filetags: :Reference:\n\n"
+                              "* ${title}\n"
                               "  :PROPERTIES:\n"
-                              "  :Custom_ID: %k\n"
-                              "  :NOTER_DOCUMENT: %F\n"
-                              "  :ROAM_KEY: cite:%k\n"
-                              "  :AUTHOR: %9a\n"
-                              "  :JOURNAL: %j\n"
-                              "  :YEAR: %y\n"
-                              "  :VOLUME: %v\n"
-                              "  :PAGES: %p\n"
-                              "  :DOI: %D\n"
-                              "  :URL: %U\n"
-                              "  :END:\n\n")
-   org-ref-notes-directory "~/Dropbox/org/notes/"
-   org-ref-pdf-directory "~/Dropbox/zotero/"
-   org-ref-notes-function 'orb-edit-notes
-   ))
+                              "  :Custom_ID: ${citekey}\n"
+                              "  :URL: ${url}\n"
+                              "  :NOTER_DOCUMENT: ${file}\n"
+                              "  :NOTER_PAGE: \n"
+                              "  :END:\n"))
+          :unnarrowed t)
+         )
+      )
 
-;; Helm-bibtex
+;; Helm-bibtex ========================================================
 (after! org-ref
   (setq bibtex-completion-pdf-field "file"
         bibtex-completion-bibliography "~/Dropbox/bibTex/zotbibs.bib"
@@ -282,37 +251,84 @@
          )
         )
   )
-
-;; some keybindings
 (map! :leader "n h b" #'helm-bibtex)
+
+;; Org-ref ============================================================
+(use-package org-ref
+  :after org-roam
+  :config
+  (setq
+   ;; org-ref-completion-library 'org-ref-ivy-cite
+   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+   org-ref-default-bibliography (list "~/Dropbox/bibTex/zotbibs.bib")
+   org-ref-bibliography-notes "~/Dropbox/org/notes/bibnotes.org"
+   org-ref-note-title-format (concat
+                              "* %y - %t\n"
+                              "  :PROPERTIES:\n"
+                              "  :Custom_ID: %k\n"
+                              "  :NOTER_DOCUMENT: %F\n"
+                              "  :ROAM_KEY: cite:%k\n"
+                              "  :AUTHOR: ${author-or-editor}\n"
+                              "  :JOURNAL: %j\n"
+                              "  :YEAR: %y\n"
+                              "  :VOLUME: %v\n"
+                              "  :PAGES: %p\n"
+                              "  :DOI: %D\n"
+                              "  :URL: ${url}\n"
+                              "  :END:\n\n")
+   org-ref-notes-directory "~/Dropbox/org/notes/"
+   org-ref-pdf-directory "~/Dropbox/zotero/"
+   org-ref-notes-function 'orb-edit-notes
+   )
+)
+
+(defun my/org-ref-open-pdf-at-point ()
+  "Open the pdf for bibtex key under point if it exists."
+  (interactive)
+  (let* ((results (org-ref-get-bibtex-key-and-file))
+         (key (car results))
+	 (pdf-file (car (bibtex-completion-find-pdf key))))
+    (if (file-exists-p pdf-file)
+	(find-file pdf-file) ; original in org-ref-help,
+                         ; opens external viewer (org-open-file pdf-file)
+      (message "No PDF found for %s" key))))
+
+(setq org-ref-open-pdf-function #'my/org-ref-open-pdf-at-point)
+(map! :leader "n r t" #'orb-insert-non-ref)
+(map! :leader "n r a" #'orb-note-actions)
 
 ;; Org-roam-bibtex
 (use-package org-roam-bibtex
-  :after (org-roam)
-  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :after org-roam
   :config
+  (require 'org-ref)
   (setq orb-preformat-keywords
-   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
-  (setq orb-templates
-        `(("r" "ref" plain (function org-roam-capture--get-point)
-           ""
-           :file-name "${=key=}"
-           :head ,(concat
-                   "#+TITLE:  ${title}\n"
-                   "#+ROAM_KEY: ${ref}\n\n"
-                   "* ${title}\n"
-                   "  :PROPERTIES:\n"
-                   "  :Custom_ID: ${=key=}\n"
-                   "  :URL: ${url}\n"
-                   "  :AUTHOR: ${author-or-editor}\n"
-                   "  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-                   "  :NOTER_PAGE: \n"
-                   "  :END:\n")
-           :unnarrowed t))))
+        '("citekey" "title" "url" "file" "author-or-editor" "keywords")
+        orb-process-file-keyword t
+        orb-file-field-extensions '("pdf"))
+  )
 
-;; some keybindings
-(map! :leader "n r t" #'orb-insert-non-ref)
-(map! :leader "n r a" #'orb-note-actions)
+(after! org-roam
+  (org-roam-bibtex-mode))
+
+(after! bibtex-completion
+  (setq bibtex-completion-bibliography '("~/Dropbox/bibTex/zotbibs.bib")))
+
+;; Org-noter settings ============================================
+(use-package org-noter
+  :after (:any org pdf-view)
+  :config
+  (setq
+   ;; The WM can handle splits
+   org-noter-notes-window-location 'other-frame
+   ;; Please stop opening frames
+   org-noter-always-create-frame nil
+   ;; I want to see the whole file
+   org-noter-hide-other nil
+   ;; Everything is relative to the main notes file
+   org-noter-notes-search-path (list org-roam-directory)
+   )
+  )
 
 ;; Org-tree-slide (presentation mode in org) ====================================
 (map! "<f8>" #'org-tree-slide-mode)
@@ -324,7 +340,6 @@
   (org-display-inline-images)
   (text-scale-mode 1)
   (beacon-mode 0))
-
 
 (defun presentation-end ()
   (text-scale-mode 0)
@@ -339,9 +354,6 @@
   (org-tree-slide-deactivate-message "Presentation finished!")
   (org-tree-slide-header t)
   (org-image-actual-width nil))
-
-
-
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

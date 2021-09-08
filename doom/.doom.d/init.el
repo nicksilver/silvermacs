@@ -101,6 +101,7 @@
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
+       biblio
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -138,7 +139,7 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +roam +noter +jupyter +dragndrop +pretty +journal)               ; organize your plain life in plain text
+       (org +roam2 +noter +jupyter +dragndrop +pretty +journal)               ; organize your plain life in plain text
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
