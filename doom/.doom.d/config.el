@@ -79,7 +79,8 @@
         ;; This would override `fill-column' if it's an integer.
         (emacs-lisp-docstring-fill-column t))
 (fill-paragraph nil region)))
-;; Handy key definition
+
+;;; Handy key definition
 (define-key global-map "\M-Q" 'unfill-paragraph)
 
 ;; This is to use pdf-tools instead of doc-viewer
@@ -88,6 +89,19 @@
   (pdf-tools-install)
   ;; This means that pdfs are fitted to width by default when you open them
   (setq-default pdf-view-display-size 'fit-width))
+
+;; Terminal settings
+;;; Vterm
+(use-package vterm
+  :commands vterm
+  :config
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
+  (setq vterm-shell "bash")
+  (setq vterm-max-scrollback 10000))
+
+;; Encryption =================================================
+(require 'epa-file)
+(epa-file-enable)
 
 ;; LSP-mode ====================================================
 (use-package python-mode
