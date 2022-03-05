@@ -28,8 +28,10 @@
 ;; `load-theme' function. This is the default:
 ;; (setq doom-theme 'doom-solarized-light)
 ;; (setq doom-theme 'doom-wilmersdorf)
-(setq doom-theme 'doom-dracula)
 ;; (setq doom-theme 'doom-moonlight)
+;; (setq doom-theme 'doom-dracula)
+;; (setq doom-theme 'doom-xcode)
+(setq doom-theme 'doom-badger)
 
 ;; Beacon flashes cursor line
 (use-package beacon
@@ -106,7 +108,14 @@
 ;; LSP-mode ====================================================
 (use-package python-mode
   :hook (python-mode . lsp-deferred)
-  :custom (lsp-headerline-breadcrumb-enable t))
+  :custom (lsp-headerline-breadcrumb-enable t)
+  :commands (lsp lsp-deferred))
+
+;; (use-package lsp-pyright
+;;   :ensure t
+;;   :hook (python-mode . (lambda ()
+;;                           (require 'lsp-pyright)
+;;                           (lsp))))  ; or lsp-deferred
 
 ;; ESS settings ================================================
 (use-package ess-r-mode
@@ -198,7 +207,8 @@
   (deft-directory "~/Dropbox/org/projects/"))
 
 ;; This speeds up deft...but limits the amount of files you see
-;; Overwrite `deft-current-files` for the `deft-buffer-setup` and limit it to 50 entries
+;; Overwrite `deft-current-files` for the `deft-buffer-setup` and
+;; limit it to 50 entries
 (defun anks-deft-limiting-fn (orig-fun &rest args)
   (let
       ((deft-current-files (-take 50 deft-current-files)))
@@ -216,7 +226,17 @@
 
 ;; Org-roam settings ===========================================
 (setq org-roam-directory "~/Dropbox/org/notes/")
-(setq org-roam-buffer-width .25)
+(setq org-roam-buffer-width .10)
+
+
+;; for org-roam-buffer-toggle
+;; Recommendation in the official manual
+(add-to-list 'display-buffer-alist
+             '("\\*org-roam\\*"
+               (display-buffer-in-direction)
+               (direction . right)
+               ;; (window-width . 0.53)
+               (window-height . fit-window-to-buffer)))
 
 ;; This changes the file name and template during note capture
 (setq org-roam-capture-templates
