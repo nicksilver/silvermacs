@@ -26,12 +26,28 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (setq doom-theme 'doom-solarized-light)
 ;; (setq doom-theme 'doom-wilmersdorf)
 ;; (setq doom-theme 'doom-moonlight)
 ;; (setq doom-theme 'doom-dracula)
 ;; (setq doom-theme 'doom-xcode)
-(setq doom-theme 'doom-badger)
+;; (setq doom-theme 'doom-solarized-dark)
+;; (setq doom-theme 'doom-badger)
+
+;; For Spacemacs theme; unecessary for other themes
+(setq doom-theme 'spacemacs-dark)
+(custom-set-faces!
+  '(doom-dashboard-banner :inherit default)
+  '(doom-dashboard-loaded :inherit default))
+
+(defun my/org-mode-hook ()
+  "Stop the org-level headers from increasing in height relative to the other text."
+  (dolist (face '(org-level-1
+                  org-level-2
+                  org-level-3
+                  org-level-4
+                  org-level-5))
+  (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
+(add-hook 'org-mode-hook #'my/org-mode-hook)
 
 ;; Beacon flashes cursor line
 (use-package beacon
@@ -225,18 +241,20 @@
       org-journal-file-header "#+TITLE: %B %Y Journal\n\n")
 
 ;; Org-roam settings ===========================================
-(setq org-roam-directory "~/Dropbox/org/notes/")
-(setq org-roam-buffer-width .10)
-
-
-;; for org-roam-buffer-toggle
-;; Recommendation in the official manual
-(add-to-list 'display-buffer-alist
-             '("\\*org-roam\\*"
-               (display-buffer-in-direction)
-               (direction . right)
-               ;; (window-width . 0.53)
-               (window-height . fit-window-to-buffer)))
+;;; taken from jethro doom config:
+;;; https://github.com/jethrokuan/dots/blob/master/.doom.d/config.el
+(use-package! org-roam
+  :after org
+  :init
+  (setq org-roam-directory "~/Dropbox/org/notes/")
+  :config
+  (org-roam-db-autosync-mode +1)
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+  (add-hook 'org-roam-mode-hook #'turn-on-visual-line-mode))
 
 ;; This changes the file name and template during note capture
 (setq org-roam-capture-templates

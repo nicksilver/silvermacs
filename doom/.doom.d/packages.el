@@ -48,6 +48,7 @@
 (package! zotxt)
 (package! beacon)
 (package! helm-bibtex)
+(package! spacemacs-theme)
 (package! org-ref)
 (package! org-tree-slide)
 (package! org-wild-notifier)
