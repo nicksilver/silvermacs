@@ -26,28 +26,29 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (setq doom-theme 'doom-wilmersdorf)
-;; (setq doom-theme 'doom-moonlight)
-;; (setq doom-theme 'doom-dracula)
 ;; (setq doom-theme 'doom-xcode)
-;; (setq doom-theme 'doom-solarized-dark)
 ;; (setq doom-theme 'doom-badger)
+(setq doom-theme 'doom-one)
+
+;; Make comments brighter
+;; (setq doom-one-brighter-comments t
+;;       doom-one-comment-bg nil)
 
 ;; For Spacemacs theme; unecessary for other themes
-(setq doom-theme 'spacemacs-dark)
-(custom-set-faces!
-  '(doom-dashboard-banner :inherit default)
-  '(doom-dashboard-loaded :inherit default))
+;; (setq doom-theme 'spacemacs-dark)
+;; (custom-set-faces!
+;;   '(doom-dashboard-banner :inherit default)
+;;   '(doom-dashboard-loaded :inherit default))
 
-(defun my/org-mode-hook ()
-  "Stop the org-level headers from increasing in height relative to the other text."
-  (dolist (face '(org-level-1
-                  org-level-2
-                  org-level-3
-                  org-level-4
-                  org-level-5))
-  (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
-(add-hook 'org-mode-hook #'my/org-mode-hook)
+;; (defun my/org-mode-hook ()
+;;   "Stop the org-level headers from increasing in height relative to the other text."
+;;   (dolist (face '(org-level-1
+;;                   org-level-2
+;;                   org-level-3
+;;                   org-level-4
+;;                   org-level-5))
+;;   (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
+;; (add-hook 'org-mode-hook #'my/org-mode-hook)
 
 ;; Beacon flashes cursor line
 (use-package beacon
@@ -210,6 +211,16 @@
   :commands (alert)
   :custom
   (alert-default-style 'libnotify))
+
+;; Add strike through for DONE tasks
+(setq org-fontify-done-headline t)
+(custom-set-faces
+ '(org-done ((t (:foreground "dim gray"
+                 :weight normal
+                 :strike-through t))))
+ '(org-headline-done
+            ((((class color) (min-colors 16) (background dark))
+               (:foreground "dim gray" :strike-through t)))))
 
 ;; Deft settings ==============================================
 (use-package deft
