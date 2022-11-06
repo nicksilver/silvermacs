@@ -25,6 +25,8 @@
 ;; space m e e if in editing mode (last expression)
 ;; space m e d if in editing mode (function)
 
+;; This is a test
+
 ;; Debugger example
 (this is an unquoted list)
 '(this is an quoted list)
