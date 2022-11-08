@@ -79,6 +79,10 @@ counter
 (buffer-name)
 (buffer-file-name)
 (switch-to-buffer (other-buffer))
+(buffer-size)
+(point)
+(point-min)
+(point-max)
 
 
 
