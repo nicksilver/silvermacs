@@ -75,7 +75,10 @@ herbivores
 (setq counter (+ counter 1))
 counter
 
-
+;; Buffers
+(buffer-name)
+(buffer-file-name)
+(switch-to-buffer (other-buffer))
 
 
 
