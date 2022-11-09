@@ -84,6 +84,31 @@ counter
 (point-min)
 (point-max)
 
+;; Functions
+
+;; Example form
+;; (defun function-name (arguments...)
+;;   "optional documentation string"
+;;   (interactive argument-passing infor)
+;;   body...)
+
+(defun multiply-by-seven (number)
+  "Multiply NUMBER by seven."
+  (* 7 number))
+
+(multiply-by-seven 7)
+
+;; Make interactive
+;; To set prefix argument (i.e. `number' in the below function) in evil mode you just type
+;; the number. Or you can \ C-u number M-x function. The backslash allows for traditional
+;; keybindings.
+(defun multiply-by-seven (number)
+  "Multiply NUMBER by seven."
+  (interactive "p")
+  (message "The result is %d" (* 7 number)))
+
+
+
 
 
 
