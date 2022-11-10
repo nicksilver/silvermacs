@@ -112,16 +112,35 @@ counter
   (nreverse list))
 
 ;; Let expressions
+;; the let expression binds symbols to values locally
 ;; (let varlist body...)
 (let ((zebra 'stripes)
       (tiger 'fierce))
   (message "One kind of animal has %s and another is %s."
            zebra tiger))
 
+(let ((birch 3)
+      pine
+      fir
+      (oak 'some))
+  (message
+  "Here are %d variables with %s, %s, and %s value."
+  birch pine fir oak))
 
+;; If expressions
+(if (> 5 4)
+    (message "5 is greater than 4!"))
 
+(defun type-of-animal (characteristic)
+  "Print message in echo area depending on CHARACTERISTIC.
+If the CHARACTERISTIC is the symbol 'fierce',
+then warn of a tiger"
+  (if (equal characteristic 'fierce)    ; if statement
+      (message "It's a tiger!")         ; then statement
+    (message "It is not so fierce!")))  ; else statement
 
-
+(type-of-animal 'fierce)
+(type-of-animal 'zebra)
 
 (provide 'intro)
 ;;; intro.el ends here
