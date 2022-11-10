@@ -107,11 +107,16 @@ counter
   (interactive "p")                     ; the 'p' tells the function to use a prefix argument for 'number'
   (message "The result is %d" (* 7 number)))
 
-
 ;; Reverse list
 (let ((list '(-0.18 -0.13 -0.045 0)))
   (nreverse list))
 
+;; Let expressions
+;; (let varlist body...)
+(let ((zebra 'stripes)
+      (tiger 'fierce))
+  (message "One kind of animal has %s and another is %s."
+           zebra tiger))
 
 
 
