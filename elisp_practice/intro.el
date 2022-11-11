@@ -142,5 +142,47 @@ then warn of a tiger"
 (type-of-animal 'fierce)
 (type-of-animal 'zebra)
 
+(if 'false 'true 'false)                ; the only thing that is false is nil
+(if nil 'true 'false)
+(> 5 4)
+(> 4 5)
+
+;; Save excursion function
+;; Saves the position of the point and mark, executes a function
+;; and then restores to the point or mark.
+;; Point => current location of the cursor
+;; Mark => sets the end of a region; among other things. You can set the
+;; mark by C-SPC.
+(message "We are %d characters into this buffer."
+         (- (point)
+            (save-excursion
+              (goto-char (point-min)) (point))))
+
+(message "We are %d characters into this buffer."
+         (- (point) (point-min)))
+
+;; Chapter 3 exercises
+(defun double-number (number)
+    "This a function that will take a NUMBER and double it."
+    (message "Your doubled number is %d"
+             (* 2 number)))
+(double-number 8)
+
+(defun double-number-interact (number)
+    "This a function that will take a NUMBER and double it."
+    (interactive "p")
+    (message "Your doubled number is %d"
+             (* 2 number)))
+
+(defun check-fill-column-size (number)
+  "Checks whether the fill-column is larger than NUMBER."
+  (interactive "p")
+  (if (= number fill-column)
+      (message "Correct! The fill-column is %d" number)
+    (if (> number fill-column)
+        (message "The fill-column is less than %d" number)
+      (message "The fill-column is greater than %d" number))))
+
+
 (provide 'intro)
 ;;; intro.el ends here
