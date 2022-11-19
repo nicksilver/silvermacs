@@ -1,19 +1,20 @@
 #+TITLE: An Introduction to Programming in Emacs lisp
 
 
-* Evaluate elisp in doom
+* General notes
+** Evaluate elisp in doom
 - c-x c-e if in typing mode
 - gr return if in editing mode
 - space m e e if in editing mode (last expression)
 - space m e d if in editing mode (function)
-
-* Debugger example
+* Chapter 1
+** Debugger example
 #+begin_src elisp
 (this is an unquoted list)
 '(this is an quoted list)
 #+end_src
 
-* Nested lists
+** Nested lists
 #+begin_src elisp
 (+ 3 (+ 2 3))
 #+end_src
@@ -21,7 +22,7 @@
 #+RESULTS:
 : 8
 
-* Use symbol in list
+** Use symbol in list
 #+begin_src elisp
 (+ fill-column 5)
 fill-column
@@ -30,7 +31,7 @@ fill-column
 #+RESULTS:
 : 80
 
-* Concat list of strings
+** Concat list of strings
 #+begin_src elisp
 (concat "this is a " "test")
 #+end_src
@@ -38,7 +39,7 @@ fill-column
 #+RESULTS:
 : this is a test
 
-* Subset a string
+** Subset a string
 #+begin_src elisp
 (substring "abcdef" 0 4)
 #+end_src
@@ -46,7 +47,7 @@ fill-column
 #+RESULTS:
 : abcd
 
-* Concat string and symbol
+** Concat string and symbol
 #+begin_src elisp
 (concat "The "
         (number-to-string (+ 2 fill-column)) " red foxes.")
@@ -55,7 +56,7 @@ fill-column
 #+RESULTS:
 : The 82 red foxes.
 
-* Many arguments to a function
+** Many arguments to a function
 #+begin_src elisp
 (* 1 2 3)
 #+end_src
@@ -63,7 +64,7 @@ fill-column
 #+RESULTS:
 : 6
 
-* Message function
+** Message function
 #+begin_src elisp
 (message "This is a message!")
 (message "I %s understand elisp" "sort of")
@@ -75,7 +76,7 @@ fill-column
 #+RESULTS:
 : The 82 red elephants.
 
-* Seting a value to a variable
+** Seting a value to a variable
 #+begin_src elisp
 (set 'flowers '(rose violet daisy buttercup))
 flowers
@@ -92,7 +93,7 @@ herbivores
 #+RESULTS:
 | chicken | deer | elk |
 
-* Counting
+** Counting
 #+begin_src elisp
 (setq counter 0)
 (setq counter (+ counter 1))
@@ -101,8 +102,17 @@ counter
 
 #+RESULTS:
 : 1
+** Reverse list
+#+begin_src elisp
+(let ((list '(-0.18 -0.13 -0.045 0)))
+  (nreverse list))
+#+end_src
 
-* Buffers
+#+RESULTS:
+| 0 | -0.045 | -0.13 | -0.18 |
+
+* Chapter 2
+** Buffers
 #+begin_src elisp
 (buffer-name)
 (buffer-file-name)
@@ -116,7 +126,8 @@ counter
 #+RESULTS:
 : 4742
 
-* Functions
+* Chapter 3
+** Functions
 ** Example form
 ;; (defun function-name (arguments...)
 ;;   "optional documentation string"
@@ -149,16 +160,7 @@ counter
 #+RESULTS:
 : multiply-by-seven
 
-* Reverse list
-#+begin_src elisp
-(let ((list '(-0.18 -0.13 -0.045 0)))
-  (nreverse list))
-#+end_src
-
-#+RESULTS:
-| 0 | -0.045 | -0.13 | -0.18 |
-
-* Let expressions
+** Let expressions
 - The 'let' expression binds symbols to values locally
 - Example form :: (let varlist body...)
 #+begin_src elisp
@@ -179,7 +181,7 @@ counter
 #+RESULTS:
 : Here are 3 variables with nil, nil, and some value.
 
-* If expressions
+** If expressions
 #+begin_src elisp
 (if (> 5 4)
     (message "5 is greater than 4!"))
@@ -201,7 +203,7 @@ then warn of a tiger"
 (> 4 5)
 #+end_src
 
-* Save excursion function
+** Save excursion function
 - Saves the position of the point and mark, executes a function and then
   restores to the point or mark.
 - Point => current location of the cursor
@@ -221,8 +223,8 @@ then warn of a tiger"
 #+RESULTS:
 : We are 4188 characters into this buffer.
 
-* Chapter 3 exercises
-** Exercise 1:
+** Chapter 3 exercises
+*** Exercise 1:
 #+begin_src elisp
 (defun double-number (number)
     "This a function that will take a NUMBER and double it."
@@ -240,7 +242,7 @@ then warn of a tiger"
 #+RESULTS:
 : double-number-interact
 
-** Exercise 2:
+*** Exercise 2:
 #+begin_src elisp
 (defun check-fill-column-size (number)
   "Checks whether the fill-column is larger than NUMBER."
@@ -254,3 +256,14 @@ then warn of a tiger"
 
 #+RESULTS:
 : check-fill-column-size
+
+* Chapter 4
+** Beginning of buffer function
+#+begin_src elisp
+(defun simplified-beginning-of-buffer ()
+  "Move point to the beginning of teh buffer;
+leave mark at previous position."
+  (interactive)
+  (push-mark)                           ; sets mark at current position
+  (goto-char (point-min)))
+#+end_src
