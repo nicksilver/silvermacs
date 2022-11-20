@@ -126,8 +126,7 @@ counter
 #+RESULTS:
 : 4742
 
-* Chapter 3
-** Functions
+* Chapter 3 - Functions
 ** Example form
 ;; (defun function-name (arguments...)
 ;;   "optional documentation string"
@@ -258,12 +257,85 @@ then warn of a tiger"
 : check-fill-column-size
 
 * Chapter 4
-** Beginning of buffer function
+** beginning-of-buffer
 #+begin_src elisp
 (defun simplified-beginning-of-buffer ()
-  "Move point to the beginning of teh buffer;
+  "Move point to the beginning of the buffer;
 leave mark at previous position."
   (interactive)
   (push-mark)                           ; sets mark at current position
   (goto-char (point-min)))
 #+end_src
+
+#+RESULTS:
+: simplified-beginning-of-buffer
+
+** mark-whole-buffer
+#+begin_src elisp
+(defun practice-mark-whole-buffer ()
+  "Put point at the beginning and mark at the end of buffer.
+You probably should not use this function in Lisp programs;
+it is usuall a mistake for a Lisp function to use any subroutine
+that uses or sets the mark."
+  (interactive)
+  (push-mark (point))
+  (push-mark (point-max) nil t)
+  (goto-char (point-min)))
+#+end_src
+
+#+RESULTS:
+: practice-mark-whole-buffer
+
+** append-to-buffer
+- other-buffer :: returns the name of the buffer other than the current one.
+
+#+begin_src elisp
+(other-buffer (current-buffer) t)
+#+end_src
+
+#+RESULTS:
+: #<buffer *scratch*>
+
+- save-excursion :: saves the point, mark, and buffer before doing something.
+- let* :: sets variables in sequence
+- set-buffer :: make buffer current for editing operations
+** Exercises
+*** Write end-of-buffer function
+#+begin_src elisp
+(defun simplified-end-of-buffer ()
+  "Move point to the end of the buffer;
+leave marka previous position."
+  (interactive)
+  (push-mark)
+  (goto-char (point-max)))
+#+end_src
+
+#+RESULTS:
+: simplified-end-of-buffer
+
+#+begin_src elisp
+(simplified-end-of-buffer)
+#+end_src
+
+#+RESULTS:
+: 6890
+*** Use ~if~ and ~get-buffer~ in function
+#+begin_src elisp
+(defun does-buffer-exist (buf-name)
+  (interactive (list (read-buffer
+                "Find buffer: "
+                (other-buffer (current-buffer) t))))
+  (if (eq nil (get-buffer buf-name))
+      (message "Sorry, your buffer does not exist!")
+    (message "Congrats, your buffer does exist!")))
+#+end_src
+
+#+RESULTS:
+: does-buffer-exist
+
+#+begin_src elisp
+(does-buffer-exist "*scratch*")
+#+end_src
+
+#+RESULTS:
+: Congrats, your buffer does exist!
