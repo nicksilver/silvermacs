@@ -142,6 +142,11 @@
   (:map inferior-ess-r-mode-map
         ("_" . ess-insert-assign)))
 
+;; LaTex settings
+;; (setq reftex-default-bibliography "/your/bib/file.bib")
+(setq TeX-parse-self t) ; Enable parse on load.
+(setq TeX-auto-save t) ; Enable parse on save.
+
 ;;; Org-mode settings ==========================================
 (setq org-directory "~/Dropbox/org/projects/")
 (setq org-todo-file "~/Dropbox/org/projects/actions.org")
