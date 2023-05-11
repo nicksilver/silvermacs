@@ -259,18 +259,18 @@
 ;; Org-roam settings ===========================================
 ;;; taken from jethro doom config:
 ;;; https://github.com/jethrokuan/dots/blob/master/.doom.d/config.el
-(use-package! org-roam
-  :after org
-  :init
-  (setq org-roam-directory "~/Dropbox/org/notes/")
-  :config
-  (org-roam-db-autosync-mode +1)
-  (set-popup-rules!
-    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
-       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
-      ("^\\*org-roam: " ; node dedicated org-roam buffer
-       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
-  (add-hook 'org-roam-mode-hook #'turn-on-visual-line-mode))
+;; (use-package! org-roam
+;;  :after org
+;;  :init
+;;  (setq org-roam-directory "~/Dropbox/org/notes/")
+;;  :config
+;;  (org-roam-db-autosync-mode +1)
+;;  (set-popup-rules!
+;;    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+;;       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+;;      ("^\\*org-roam: " ; node dedicated org-roam buffer
+;;       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+;;  (add-hook 'org-roam-mode-hook #'turn-on-visual-line-mode))
 
 ;; This changes the file name and template during note capture
 (setq org-roam-capture-templates
