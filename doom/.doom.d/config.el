@@ -148,3 +148,42 @@
       org-journal-date-prefix "* "
       org-journal-date-format "%A, %B %d %Y"
       org-journal-file-header "#+TITLE: %B %Y Journal\n\n")
+
+;;; Org-roam
+;;;; taken from jethro doom config:
+;;;; https://github.com/jethrokuan/dots/blob/master/.doom.d/config.el
+(use-package! org-roam
+  :after org
+  :init
+  (setq org-roam-directory "~/Dropbox/org/notes/")
+  :config
+  (org-roam-db-autosync-mode +1)
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .27 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+  (add-hook 'org-roam-mode-hook #'turn-on-visual-line-mode))
+
+;;;; This changes the file name and template during note capture
+(setq org-roam-capture-templates
+      `(("d" "default" plain "%?"
+         :target (file+head "${slug}.org"
+                            "#+TITLE: ${title}\n")
+         :unnarrowed t)
+         ("r" "reference" plain "%?"
+          :target (file+head "${citekey}.org"
+                             ,(concat
+                              "#+TITLE:  ${title}\n"
+                              "#+AUTHOR: ${author-or-editor}\n"
+                              "#+filetags: :Reference:\n\n"
+                              "* ${title}\n"
+                              "  :PROPERTIES:\n"
+                              "  :Custom_ID: ${citekey}\n"
+                              "  :URL: ${url}\n"
+                              "  :NOTER_DOCUMENT: ${file}\n"
+                              "  :NOTER_PAGE: \n"
+                              "  :END:\n"))
+          :unnarrowed t)
+         )
+      )
