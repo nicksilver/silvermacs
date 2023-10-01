@@ -12,7 +12,11 @@
 (setq doom-variable-pitch-font (font-spec :family "Cantarell" :size 14 :weight 'regular))
 
 ;;; Theme
-(setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-gruvbox)
+;; (setq doom-theme 'doom-vibrant)
+;; (setq doom-theme 'tsdh-dark)
 
 ;;; Modeline stuff (see https://github.com/seagle0128/doom-modeline)
 (setq doom-modeline-height 35)
