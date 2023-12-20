@@ -14,9 +14,11 @@
 ;;; Theme
 ;; (setq doom-theme 'doom-one)
 ;; (setq doom-theme 'doom-dark+)
-(setq doom-theme 'doom-gruvbox)
-;; (setq doom-theme 'doom-vibrant)
+;; (setq doom-theme 'doom-nord)
+;; (setq doom-theme 'doom-gruvbox)
 ;; (setq doom-theme 'tsdh-dark)
+;; (setq doom-theme 'doom-challenger-deep)
+(setq doom-theme 'modus-vivendi)
 
 ;;; Modeline stuff (see https://github.com/seagle0128/doom-modeline)
 (setq doom-modeline-height 35)
@@ -39,7 +41,7 @@
 (setq doom-modeline-lsp t)
 (setq doom-modeline-modal-icon t)
 
-;; General preferences
+;; General preferences ==========================================
 ;;; Word wrap
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
@@ -65,7 +67,7 @@
   ;; This means that pdfs are fitted to width by default when you open them
   (setq-default pdf-view-display-size 'fit-width))
 
-;; Vterm
+;; Vterm =======================================================
 (use-package vterm
   :commands vterm
   :config
@@ -81,7 +83,7 @@
   (:map inferior-ess-r-mode-map
         ("_" . ess-insert-assign)))
 
-;; Org-mode
+;; Org-mode ====================================================
 (setq org-directory "~/Dropbox/org/projects/")
 (setq org-todo-file "~/Dropbox/org/projects/actions.org")
 
