@@ -78,7 +78,7 @@
   (setq vterm-shell "bash")
   (setq vterm-max-scrollback 10000))
 
-;; ESS settings ================================================
+;; ESS settings
 (use-package ess-r-mode
   :bind
   (:map ess-r-mode-map
