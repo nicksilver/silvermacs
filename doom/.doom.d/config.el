@@ -8,7 +8,10 @@
 
 ;; Viz settings
 ;;; Fonts
-(setq doom-font (font-spec :family "Fira Code Retina" :size 14))
+;; (setq doom-font (font-spec :family "Fira Code Retina" :size 14))
+;; (setq doom-variable-pitch-font (font-spec :family "Cantarell" :size 14 :weight 'regular))
+
+(setq doom-font (font-spec :family "Monaspace Neon" :size 14))
 (setq doom-variable-pitch-font (font-spec :family "Cantarell" :size 14 :weight 'regular))
 
 ;;; Theme
