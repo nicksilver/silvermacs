@@ -161,7 +161,6 @@
 ;;; Org-roam
 ;;;; taken from jethro doom config:
 ;;;; https://github.com/jethrokuan/dots/blob/master/.doom.d/config.el
-(require 'org-roam)
 (use-package! org-roam
   :after org
   :init
