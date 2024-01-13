@@ -78,7 +78,7 @@
   (setq vterm-shell "bash")
   (setq vterm-max-scrollback 10000))
 
-;; ESS settings
+;; ESS settings =================================================
 (use-package ess-r-mode
   :bind
   (:map ess-r-mode-map
@@ -161,6 +161,7 @@
 ;;; Org-roam
 ;;;; taken from jethro doom config:
 ;;;; https://github.com/jethrokuan/dots/blob/master/.doom.d/config.el
+(require 'org-roam)
 (use-package! org-roam
   :after org
   :init
@@ -196,3 +197,12 @@
           :unnarrowed t)
          )
       )
+
+;; Export org-roam files to Hugo markdown
+(defun nicksilver/org-roam-export-all ()
+  "Re-exports all Org-roam files to Hugo markdown."
+  (interactive)
+  (dolist (f (org-roam-list-files))
+    (with-current-buffer (find-file f)
+      (when (s-contains? "HUGO_BASE_DIR" (buffer-string))
+        (org-hugo-export-wim-to-md)))))
