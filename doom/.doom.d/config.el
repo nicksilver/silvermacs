@@ -189,8 +189,8 @@
 (add-hook 'context-menu-functions #'denote-context-menu)
 
 ;; Org-mode ====================================================
-(setq org-directory "~/Dropbox/org/projects/")
-(setq org-todo-file "~/Dropbox/org/projects/actions.org")
+(setq org-directory "~/Dropbox/org/gtd/")
+(setq org-todo-file "~/Dropbox/org/gtd/actions.org")
 
 ;;; Set TODO keywords
 (setq org-todo-keywords
@@ -205,7 +205,7 @@
               "/archive/%s::datetree/"))
 
 ;;; Set org agenda files
-(setq org-agenda-files (list org-directory))
+(setq org-agenda-files (list org-directory denote-directory))
 
 ;;; Include timestamp when closing a todo
 (setq org-log-done 'time)
@@ -216,17 +216,9 @@
                       ("@burlington" . ?B)
                       ("@home" . ?H)
                       ("@work" . ?W)
-                      ("@ocean" . ?O)
-                      ("@river" . ?R)
-                      ("@mountain" . ?M)
-                      ("paddling" . ?p)
-                      ("hunting" . ?h)
-                      ("fishing" . ?f)
-                      ("surfing" . ?s)
-                      ("cycling" . ?c)
-                      ("climbing" . ?m)
-                      ("running" . ?r)
-                      ("hiking" . ?i)))
+                      ("recreation" . ?r)
+                      ("blog" . ?b)
+                      ("idea" . ?i)))
 
 ;;; Capture
 (after! org
