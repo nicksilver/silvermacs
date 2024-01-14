@@ -49,6 +49,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(unpin! org-roam)
+;;(unpin! org-roam)
 (package! org :pin "806abc5a2bbcb5f884467a0145547221ba09eb59" )
 (package! denote)
