@@ -188,6 +188,50 @@
 ;; `context-menu-mode'.
 (add-hook 'context-menu-functions #'denote-context-menu)
 
+;; Citar ======================================================
+(use-package citar
+  :custom
+  (citar-bibliography '("~/Zotero/better-bibtex/my-library.bib" ))
+  :hook
+  (LaTeX-mode . citar-capf-setup)
+  (org-mode . citar-capf-setup))
+
+;;; Adds contextual access actions in the minibuffer and at-point
+(use-package citar-embark
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode))
+
+;;; Settings to integrate with denote
+(use-package citar-denote
+  :custom
+  ;; Allow multiple notes per bibliographic entry
+  (citar-open-always-create-notes nil)
+  ;; Use package defaults
+  (citar-denote-file-type 'org)
+  (citar-denote-subdir nil)
+  (citar-denote-signature nil)
+  (citar-denote-template nil)
+  (citar-denote-keyword "bib")
+  (citar-denote-use-bib-keywords nil)
+  (citar-denote-title-format "title")
+  (citar-denote-title-format-authors 1)
+  (citar-denote-title-format-andstr "and")
+  :init
+  (citar-denote-mode)
+  ;; Bind all available commands
+  :bind (("C-c w c" . citar-create-note)
+         ("C-c w n" . citar-denote-open-note)
+         ("C-c w d" . citar-denote-dwim)
+         ("C-c w e" . citar-denote-open-reference-entry)
+         ("C-c w a" . citar-denote-add-citekey)
+         ("C-c w k" . citar-denote-remove-citekey)
+         ("C-c w r" . citar-denote-find-reference)
+         ("C-c w l" . citar-denote-link-reference)
+         ("C-c w f" . citar-denote-find-citation)
+         ("C-c w x" . citar-denote-nocite)
+         ("C-c w y" . citar-denote-cite-nocite)))
+
 ;; Org-mode ====================================================
 (setq org-directory "~/Dropbox/org/gtd/")
 (setq org-todo-file "~/Dropbox/org/gtd/actions.org")
