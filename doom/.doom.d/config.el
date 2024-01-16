@@ -276,7 +276,15 @@
         ("n" "Note" entry
           (file+headline org-default-notes-file "Inbox")
           "* %?\n %i\n %a"
-          :kill-buffer t))))
+          :kill-buffer t)
+
+        ("d" "Denote" plain
+         (file denote-last-path)
+         #'denote-org-capture
+         :no-save t
+         :immediate-finish nil
+         :kill-buffer t
+         :jump-to-captured t))))
 
 ;;; Add strike through for DONE tasks
 (setq org-fontify-done-headline t)
