@@ -16,12 +16,11 @@
 
 ;;; Theme
 ;; (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-badger)
 ;; (setq doom-theme 'doom-dark+)
-;; (setq doom-theme 'doom-nord)
 ;; (setq doom-theme 'doom-gruvbox)
-;; (setq doom-theme 'tsdh-dark)
-;; (setq doom-theme 'doom-challenger-deep)
-(setq doom-theme 'modus-vivendi)
+;; (setq doom-theme 'modus-vivendi)
+(load-theme 'spacemacs-dark t)
 
 ;;; Modeline stuff (see https://github.com/seagle0128/doom-modeline)
 (setq doom-modeline-height 35)
