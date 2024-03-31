@@ -94,6 +94,12 @@
 (setq denote-excluded-directories-regexp nil)
 (setq denote-excluded-keywords-regexp nil)
 
+;; Denote journal
+(require 'denote-journal-extras)
+(setq denote-journal-extras-directory "~/Dropbox/org/denote/journal")
+(setq denote-journal-extras-title-format nil) ; always prompt for title
+(setq denote-journal-extras-keyword "journal")
+
 ;; Pick dates, where relevant, with Org's advanced interface:
 (setq denote-date-prompt-use-org-read-date t)
 
