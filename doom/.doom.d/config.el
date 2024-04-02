@@ -281,14 +281,6 @@
             ((((class color) (min-colors 16) (background dark))
                (:foreground "dim gray" :strike-through t)))))
 
-;;; Org-journal settings
-(setq org-journal-dir "~/Dropbox/org/journal/"
-      org-journal-file-type 'monthly
-      org-journal-file-format "%m%Y.org"
-      org-journal-date-prefix "* "
-      org-journal-date-format "%A, %B %d %Y"
-      org-journal-file-header "#+TITLE: %B %Y Journal\n\n")
-
 ;;; Org-roam
 ;;;; taken from jethro doom config:
 ;;;; https://github.com/jethrokuan/dots/blob/master/.doom.d/config.el
