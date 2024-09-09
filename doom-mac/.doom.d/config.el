@@ -85,7 +85,7 @@
 (require 'denote)
 
 ;; Remember to check the doc strings of those variables.
-(setq denote-directory (expand-file-name "~/Dropbox/org/denote/"))
+(setq denote-directory (expand-file-name "~/org/denote/"))
 (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
 (setq denote-infer-keywords t)
 (setq denote-sort-keywords t)
@@ -95,10 +95,10 @@
 (setq denote-excluded-keywords-regexp nil)
 
 ;; Denote journal
-(require 'denote-journal-extras)
-(setq denote-journal-extras-directory "~/Dropbox/org/denote/journal")
-(setq denote-journal-extras-title-format nil) ; always prompt for title
-(setq denote-journal-extras-keyword "journal")
+;; (require 'denote-journal-extras)
+;; (setq denote-journal-extras-directory "~/org/denote/journal")
+;; (setq denote-journal-extras-title-format nil) ; always prompt for title
+;; (setq denote-journal-extras-keyword "journal")
 
 ;; Pick dates, where relevant, with Org's advanced interface:
 (setq denote-date-prompt-use-org-read-date t)
@@ -117,7 +117,8 @@
 
 ;; If you use Markdown or plain text files (Org renders links as buttons
 ;; right away)
-(add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+(add-hook 'find-file-hook #'denote-fontify-links-mode)
+;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
 
 ;; We use different ways to specify a path for demo purposes.
 (setq denote-dired-directories
@@ -218,8 +219,8 @@
          ("C-c w y" . citar-denote-cite-nocite)))
 
 ;; Org-mode ====================================================
-(setq org-directory "~/Dropbox/org/gtd/")
-(setq org-todo-file "~/Dropbox/org/gtd/actions.org")
+(setq org-directory "~/org/gtd/")
+(setq org-todo-file "~/org/gtd/actions.org")
 
 ;;; Set TODO keywords
 (setq org-todo-keywords
