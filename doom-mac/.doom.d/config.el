@@ -4,7 +4,7 @@
 ;; sync' after modifying this file!
 
 (setq user-full-name "Nick Silverman"
-      user-mail-address "nick.silverman11@gmail.com")
+user-mail-address "nick.silverman11@gmail.com")
 
 ;; Viz settings
 ;;; Fonts
@@ -86,7 +86,7 @@
 
 ;; Remember to check the doc strings of those variables.
 (setq denote-directory (expand-file-name "~/org/denote/"))
-(setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
+(setq denote-known-keywords '("admin" "tech" "project" "research" "idea"))
 (setq denote-infer-keywords t)
 (setq denote-sort-keywords t)
 (setq denote-file-type nil) ; Org is the default, set others here
@@ -138,7 +138,7 @@
 ;; Denote DOES NOT define any key bindings.  This is for the user to
 ;; decide.  For example:
 (let ((map global-map))
-  (define-key map (kbd "C-c n n") #'denote)
+  (define-key map (kbd "C-c n n") #'denote-open-or-create)
   (define-key map (kbd "C-c n c") #'denote-region) ; "contents" mnemonic
   (define-key map (kbd "C-c n N") #'denote-type)
   (define-key map (kbd "C-c n d") #'denote-date)
@@ -222,6 +222,9 @@
 (setq org-directory "~/org/gtd/")
 (setq org-todo-file "~/org/gtd/actions.org")
 
+;; This logs org nodes into drawer under heading
+(setq org-log-into-drawer t)
+
 ;;; Set TODO keywords
 (setq org-todo-keywords
       '((sequence "TODO" "WAITING" "|" "DONE")))
@@ -241,13 +244,10 @@
 (setq org-log-done 'time)
 
 ;;; Create list of common tags
-(setq org-tag-alist '(("@errand" . ?E)
-                      ("@tumbleleaf" . ?T)
-                      ("@burlington" . ?B)
-                      ("@home" . ?H)
-                      ("@work" . ?W)
-                      ("recreation" . ?r)
-                      ("blog" . ?b)
+(setq org-tag-alist '(("@home" . ?H)
+                      ("@mitre" . ?M)
+                      ("project" . ?p)
+                      ("research" . ?r)
                       ("idea" . ?i)))
 
 ;;; Capture
